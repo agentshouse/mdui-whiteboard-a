@@ -1,6 +1,0 @@
-ref: af_h6.p
-path: /rooms/whiteboard-port/settings/schema.yaml
-revisions:
-  - revision: fr_h6.1.w
-    created_at: 2026-10-11T00:02:14.303067Z
-    author_user: 01a0e90c-531c-76df-85bf-d34caf05519c

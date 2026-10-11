@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useObserve } from './house';
 import { DraftSession } from './draft-session';
-import { sceneInputPatch } from './scene-draft';
+import { DrawingDraftInput } from './drawing-draft-input';
 import { Excalidraw, MainMenu, restoreElements } from '@excalidraw/excalidraw';
 import type { ExcalidrawInitialDataState } from '@excalidraw/excalidraw/types';
 import type { AppState, BinaryFiles, ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/types';
@@ -21,6 +21,13 @@ export function Whiteboard({ ownerDocument }: { ownerDocument: Document }) {
   const runtimeRef = useRef<HouseRuntime | null>(null);
   const sessions = useRef(new Map<string, DraftSession>());
   const currentSession = useRef<DraftSession | null>(null);
+  const inputSessions = useRef(new Map<DraftSession, DrawingDraftInput>());
+  const drawingInput = (session: DraftSession, drawing: Drawing) => {
+    let input = inputSessions.current.get(session);
+    if (!input) { input = new DrawingDraftInput(session, drawing); inputSessions.current.set(session, input); }
+    input.drawing = drawing;
+    return input;
+  };
   const opening = useRef(0);
   const openingKey = useRef('');
   const sharedUpdate = useRef(false);
@@ -97,25 +104,25 @@ export function Whiteboard({ ownerDocument }: { ownerDocument: Document }) {
     let session = sessions.current.get(key);
     if (!session) { session = new DraftSession(md, drawing.room, drawing.path); sessions.current.set(key, session); }
     try {
-      const draft = await session.read();
+      const input = drawingInput(session, drawing);
+      const draft = await input.read();
       if (opening.current !== token) return;
       if (draft?.parts.creation || draft?.parts.move || draft?.parts.removal || draft?.parts.markdown) throw new Error('This drawing has a structural Room Draft. Review it in House before editing the canvas.');
-      const scene = parseScene(draft?.parts.sections?.Scene?.value ?? drawing.sceneText);
-      const localTitle = draft?.parts.fields?.title?.value ?? drawing.title;
+      const { scene, title: localTitle } = input.preview(draft);
       if (typeof localTitle !== 'string') throw new Error('The local drawing title draft is invalid. It has been kept in House.');
       showDrawing(drawing, scene, localTitle, session);
+      if (input.hasFailures) setError("This drawing has local input that could not be kept. Retry that input before Save.");
     } catch (error) { if (opening.current === token) setError(errorText(error)); }
     finally { if (opening.current === token) openingKey.current = ''; }
   };
   const keepDraft = (kind: 'scene' | 'title', previous = currentScene.current) => {
     const drawing = selectedRef.current, session = currentSession.current;
     if (!drawing || !session) return;
-    const parts = kind === 'scene'
-      ? sceneInputPatch(previous, currentScene.current, drawing.sceneText)
-      : { fields: { title: { value: titleRef.current, base: { value: drawing.title } } } };
+    const input = drawingInput(session, drawing);
     const pending = pendingInput.current.get(session) ?? { scene: 0, title: 0, sceneFailed: false, titleFailed: false };
     pendingInput.current.set(session, pending); pending[kind]++;
-    void session.stage(parts).then(() => {
+    const staged = kind === 'scene' ? input.scene(previous, currentScene.current) : input.title(titleRef.current);
+    void staged.then(() => {
       pending[kind === 'scene' ? 'sceneFailed' : 'titleFailed'] = false;
     }, error => {
       pending[kind === 'scene' ? 'sceneFailed' : 'titleFailed'] = true;
@@ -171,8 +178,11 @@ export function Whiteboard({ ownerDocument }: { ownerDocument: Document }) {
     const savingText = serializeScene(savingScene);
     const session = currentSession.current;
     if (!session) return;
+    const input = drawingInput(session, selectedRef.current);
+    await input.flush();
     const updatedAt = new Date().toISOString();
     await session.stage({ fields: { updated_at: { value: updatedAt, base: { value: selectedRef.current.updated_at } } } });
+    await input.flush();
     await session.commit();
     const drawing = { ...selectedRef.current, title: savingTitle, updated_at: updatedAt, sceneText: savingText };
     selectedRef.current = drawing; setSelected(drawing);

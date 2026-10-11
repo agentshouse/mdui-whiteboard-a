@@ -43,7 +43,7 @@ before(async () => {
       export function Excalidraw({onInitialize,onChange,onExcalidrawAPI,initialData}) {
         const [draft,setDraft] = useState(initialData.elements.length ? 'Restored sketch' : '');
         useEffect(() => { globalThis.__whiteboardHarness.mounts++; onExcalidrawAPI({updateScene:value=>setDraft(value.elements.length?'Shared sketch':''),addFiles:()=>{}}); onInitialize({getSceneElements:()=>initialData.elements,getAppState:()=>initialData.appState,getFiles:()=>initialData.files}); }, []);
-        return React.createElement('input', { 'aria-label':'Canvas draft',value:draft,onInput:event=>{setDraft(event.currentTarget.value);onChange([{id:'rectangle-1',type:'rectangle',x:0,y:0,width:10,height:10}],{viewBackgroundColor:'#fff'},{});}});
+        return React.createElement('input', { 'aria-label':'Canvas draft',value:draft,onInput:event=>{setDraft(event.currentTarget.value);onChange([{id:'rectangle-1',type:'rectangle',x:event.currentTarget.value.length,y:0,width:10,height:10}],{viewBackgroundColor:'#fff'},{});}});
       }
       export const restoreElements = elements => elements;
       export const MainMenu = () => null;
@@ -161,5 +161,23 @@ test('Whiteboard keeps local Save enabled while Provider writes are halted', asy
     await act(async () => { input.value='Paused local sketch'; input.dispatchEvent(new browser.Event('input',{bubbles:true}) as unknown as Event); });
     assert.equal(harness.saves,0); assert.equal(button('Save').disabled,false);
     await act(async()=>button('Save').click()); assert.equal(harness.saves,1);
+  } finally { await unmount(); }
+});
+
+
+test('Whiteboard Save cannot consume a failed canvas via its later timestamp write; successful retry restores it', async () => {
+  try {
+    await mount(rooms,'2026-10-11T13:00:00Z');
+    const md = harness.runtime as any, write = md.roomDraft.write; let fail = true;
+    md.roomDraft.write = async (...args: any[]) => { if (fail) { fail = false; throw new Error('local canvas write failed'); } return write(...args); };
+    const canvas = container.querySelector<HTMLInputElement>('[aria-label="Canvas draft"]')!;
+    await act(async () => { canvas.value='Failed canvas input'; canvas.dispatchEvent(new browser.Event('input',{bubbles:true}) as unknown as Event); });
+    assert.match(container.textContent!,/local canvas write failed/);
+    await act(async () => button('Save').click());
+    assert.equal(harness.saves,0); assert.equal(harness.writes,0,'Save must not mask the input failure with its timestamp write');
+    assert.equal(canvas.value,'Failed canvas input'); assert.match(container.textContent!,/could not be kept: canvas/);
+    await act(async () => { canvas.value='Retried canvas input'; canvas.dispatchEvent(new browser.Event('input',{bubbles:true}) as unknown as Event); });
+    assert.ok(harness.drafts.get('drawings/one.md').parts.sections.Scene.value.includes('rectangle-1'));
+    await act(async () => button('Save').click()); assert.equal(harness.saves,1);
   } finally { await unmount(); }
 });
