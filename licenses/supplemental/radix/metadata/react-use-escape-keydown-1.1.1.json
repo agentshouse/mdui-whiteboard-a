@@ -1,0 +1,23 @@
+{
+  "name": "@radix-ui/react-use-escape-keydown",
+  "version": "1.1.1",
+  "license": "MIT",
+  "gitHead": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+  "repository": {
+    "url": "git+https://github.com/radix-ui/primitives.git",
+    "type": "git"
+  },
+  "dist": {
+    "shasum": "b3fed9bbea366a118f40427ac40500aa1423cc29",
+    "tarball": "https://registry.npmjs.org/@radix-ui/react-use-escape-keydown/-/react-use-escape-keydown-1.1.1.tgz",
+    "fileCount": 8,
+    "integrity": "sha512-Il0+boE7w/XebUHyBjroE+DbByORGR9KKmITzbR7MyQ4akpORYP/ZmbhAr0DG7RmmBqoOnZdy2QlvajJ2QA59g==",
+    "signatures": [
+      {
+        "sig": "MEQCIAKXvLpxmHp5VsVkrjnzNYIL6mPGb5TS+S2rrwh2EOVLAiA7XBDebZJnkYpUqu1slGH0dsrM82FSXqXqOk2s3qQe+A==",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "unpackedSize": 8252
+  }
+}

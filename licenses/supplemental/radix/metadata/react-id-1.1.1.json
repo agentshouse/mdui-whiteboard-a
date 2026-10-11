@@ -1,0 +1,23 @@
+{
+  "name": "@radix-ui/react-id",
+  "version": "1.1.1",
+  "license": "MIT",
+  "gitHead": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+  "repository": {
+    "url": "git+https://github.com/radix-ui/primitives.git",
+    "type": "git"
+  },
+  "dist": {
+    "shasum": "1404002e79a03fe062b7e3864aa01e24bd1471f7",
+    "tarball": "https://registry.npmjs.org/@radix-ui/react-id/-/react-id-1.1.1.tgz",
+    "fileCount": 8,
+    "integrity": "sha512-kGkGegYIdQsOb4XjsfM97rXsiHaBwco+hFI66oO4s9LU+PLAC5oJ7khdOVFxkhsmlbpUqDAvXw11CluXP+jkHg==",
+    "signatures": [
+      {
+        "sig": "MEYCIQD2lLFx9H76vgjrrBxaDpQXxdC80do+Taf82YxVAvrpdQIhAIKT8AfWIIn2Kf4vLiQ3k2hk3LIXokcjE97maPMpAqdW",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "unpackedSize": 7231
+  }
+}

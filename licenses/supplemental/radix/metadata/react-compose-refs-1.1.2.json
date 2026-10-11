@@ -1,0 +1,23 @@
+{
+  "name": "@radix-ui/react-compose-refs",
+  "version": "1.1.2",
+  "license": "MIT",
+  "gitHead": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+  "repository": {
+    "url": "git+https://github.com/radix-ui/primitives.git",
+    "type": "git"
+  },
+  "dist": {
+    "shasum": "a2c4c47af6337048ee78ff6dc0d090b390d2bb30",
+    "tarball": "https://registry.npmjs.org/@radix-ui/react-compose-refs/-/react-compose-refs-1.1.2.tgz",
+    "fileCount": 8,
+    "integrity": "sha512-z4eqJvfiNnFMHIIvXP3CY57y2WJs5g2v3X0zm9mEJkrkNv4rDxu+sg9Jh8EkXyeqBkB7SOcboo9dMVqhyrACIg==",
+    "signatures": [
+      {
+        "sig": "MEQCIBtW7xvsFIILyeIz/1cUm6B3pCRUkwaroD3karN1NFEjAiAwQkflvGk93Lv9LUScKC1goH+yDGIbJeo8xr85Opgajw==",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "unpackedSize": 11879
+  }
+}

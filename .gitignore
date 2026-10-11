@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.local-visual-dist/
+tests/screenshots/
+tests/*.log
+.mermaid-feasibility-dist/
+
+# Transient runtime-migration command output
+/reports/runtime-migration/*.log
+/reports/runtime-migration/*.err

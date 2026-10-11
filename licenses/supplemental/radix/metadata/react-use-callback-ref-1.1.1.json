@@ -1,0 +1,23 @@
+{
+  "name": "@radix-ui/react-use-callback-ref",
+  "version": "1.1.1",
+  "license": "MIT",
+  "gitHead": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+  "repository": {
+    "url": "git+https://github.com/radix-ui/primitives.git",
+    "type": "git"
+  },
+  "dist": {
+    "shasum": "62a4dba8b3255fdc5cc7787faeac1c6e4cc58d40",
+    "tarball": "https://registry.npmjs.org/@radix-ui/react-use-callback-ref/-/react-use-callback-ref-1.1.1.tgz",
+    "fileCount": 8,
+    "integrity": "sha512-FkBMwD+qbGQeMu1cOHnuGB6x4yzPjho8ap5WtbEJ26umhgqVXbhekKUQO+hZEL1vU92a3wHwdp0HAcqAUF5iDg==",
+    "signatures": [
+      {
+        "sig": "MEYCIQCb/YTUW/cgeKQaCWWRzA0b4dv2cY36jTlXRa7OfVqfIwIhAN0G8wPFISucFpd6e3Wx2dKxlGBDZlZCdRFhp5WhxggD",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "unpackedSize": 6846
+  }
+}

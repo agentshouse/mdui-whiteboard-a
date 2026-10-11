@@ -1,0 +1,23 @@
+{
+  "name": "@radix-ui/react-context",
+  "version": "1.1.2",
+  "license": "MIT",
+  "gitHead": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+  "repository": {
+    "url": "git+https://github.com/radix-ui/primitives.git",
+    "type": "git"
+  },
+  "dist": {
+    "shasum": "61628ef269a433382c364f6f1e3788a6dc213a36",
+    "tarball": "https://registry.npmjs.org/@radix-ui/react-context/-/react-context-1.1.2.tgz",
+    "fileCount": 8,
+    "integrity": "sha512-jCi/QKUM2r1Ju5a3J64TH2A5SpKAgh0LpknyqdQ4m6DCV0xJ2HG1xARRwNGPQfi1SLdLWZ1OJz6F4OMBBNiGJA==",
+    "signatures": [
+      {
+        "sig": "MEYCIQCyP5CwEmIDT5gpj0Irx07c7gH7r64YJiBhOkPloqc1PQIhAMMdq7SXcf07c8jvCJK4EnLtOfO2rn3ScVIB/I80+6AA",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "unpackedSize": 28571
+  }
+}

@@ -1,0 +1,9 @@
+types:
+  drawing:
+    fields:
+      id: { kind: string, required: true }
+      title: { kind: string, required: true }
+      updated_at: { kind: string, required: true }
+    sections:
+      Scene: { kind: text }
+

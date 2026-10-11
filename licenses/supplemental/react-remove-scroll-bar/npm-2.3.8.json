@@ -1,0 +1,167 @@
+{
+  "_id": "react-remove-scroll-bar@2.3.8",
+  "_rev": "21-500e320cbdf24704c8051d5d31664bb5",
+  "name": "react-remove-scroll-bar",
+  "dist-tags": {
+    "latest": "2.3.8"
+  },
+  "versions": [
+    "1.0.0",
+    "1.1.0",
+    "1.1.1",
+    "1.1.2",
+    "1.1.3",
+    "1.1.4",
+    "1.1.5",
+    "1.2.0",
+    "2.0.0",
+    "2.1.0",
+    "2.1.1",
+    "2.2.0",
+    "2.3.0",
+    "2.3.1",
+    "2.3.3",
+    "2.3.4",
+    "2.3.5",
+    "2.3.6",
+    "2.3.7",
+    "2.3.8"
+  ],
+  "time": {
+    "created": "2019-01-18T02:57:17.378Z",
+    "modified": "2024-12-15T02:08:28.827Z",
+    "1.0.0": "2019-01-18T02:57:17.510Z",
+    "1.1.0": "2019-01-18T03:41:15.346Z",
+    "1.1.1": "2019-01-18T22:51:11.213Z",
+    "1.1.2": "2019-01-18T23:39:05.014Z",
+    "1.1.3": "2019-01-21T08:52:47.455Z",
+    "1.1.4": "2019-03-02T21:37:14.327Z",
+    "1.1.5": "2019-05-03T23:41:27.077Z",
+    "1.2.0": "2019-06-04T22:33:18.721Z",
+    "2.0.0": "2019-06-07T08:55:17.003Z",
+    "2.1.0": "2020-04-16T08:01:17.716Z",
+    "2.1.1": "2020-11-27T06:24:04.345Z",
+    "2.2.0": "2021-02-10T08:12:53.347Z",
+    "2.3.0": "2022-04-17T06:14:38.141Z",
+    "2.3.1": "2022-05-01T06:33:46.190Z",
+    "2.3.3": "2022-06-06T10:52:34.752Z",
+    "2.3.4": "2022-10-12T22:40:35.262Z",
+    "2.3.5": "2024-02-19T11:24:02.514Z",
+    "2.3.6": "2024-03-14T09:57:14.538Z",
+    "2.3.7": "2024-12-15T01:15:25.311Z",
+    "2.3.8": "2024-12-15T02:08:28.658Z"
+  },
+  "bugs": {
+    "url": "https://github.com/theKashey/react-remove-scroll-bar/issues"
+  },
+  "author": "Anton Korzunov <thekashey@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/theKashey/react-remove-scroll-bar#readme",
+  "keywords": [
+    "scroll"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theKashey/react-remove-scroll-bar.git"
+  },
+  "description": "Removes body scroll without content _shake_",
+  "maintainers": [
+    "kashey <thekashey@gmail.com>"
+  ],
+  "readmeFilename": "README.md",
+  "_contentLength": 66434,
+  "version": "2.3.8",
+  "main": "dist/es5/index.js",
+  "jsnext:main": "dist/es2015/index.js",
+  "module": "dist/es2015/index.js",
+  "types": "dist/es5/index.d.ts",
+  "scripts": {
+    "dev": "lib-builder dev",
+    "test": "jest",
+    "test:ci": "jest --runInBand --coverage",
+    "build": "lib-builder build && yarn size:report",
+    "release": "yarn build && yarn test",
+    "size": "yarn size-limit",
+    "size:report": "yarn --silent size-limit --json > .size.json",
+    "lint": "lib-builder lint",
+    "format": "lib-builder format",
+    "update": "lib-builder update",
+    "prepublish": "yarn build && yarn changelog",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "changelog:rewrite": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "storybook": "start-storybook -p 6006"
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^11.0.2",
+    "size-limit": "^11.0.2",
+    "@storybook/react": "^6.4.22",
+    "@testing-library/react": "^12.1.5",
+    "@types/react": "^16.14.56",
+    "@theuiteam/lib-builder": "^0.1.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "peerDependencies": {
+    "@types/react": "*",
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "react-style-singleton": "^2.2.2",
+    "tslib": "^2.0.0"
+  },
+  "module:es2019": "dist/es2019/index.js",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ],
+    "*.{js,css,json,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "printWidth": 120,
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true
+  },
+  "gitHead": "b3b1287aad81def2e2ae707274b74531b61ddbaf",
+  "_nodeVersion": "18.20.1",
+  "_npmVersion": "10.5.0",
+  "dist": {
+    "integrity": "sha512-9r+yi9+mgU33AKcj6IbT9oRCO78WriSj6t/cF8DWBZJ9aOGPOTEDvdUDz1FwKim7QXWwmHqtdHnRJfhAxEG46Q==",
+    "shasum": "99c20f908ee467b385b68a3469b4a3e750012223",
+    "tarball": "https://registry.npmjs.org/react-remove-scroll-bar/-/react-remove-scroll-bar-2.3.8.tgz",
+    "fileCount": 27,
+    "unpackedSize": 24936,
+    "signatures": [
+      {
+        "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA",
+        "sig": "MEUCIHlomVu71lQb8ZijaHqU1MLX+jfxogM47L/EfAgq1+nWAiEA5rJQaLl579SuaDGQcqDm9ikUi3EcxmDkxW7PSq8Auh0="
+      }
+    ]
+  },
+  "_npmUser": "kashey <thekashey@gmail.com>",
+  "directories": {},
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages-npm-production",
+    "tmp": "tmp/react-remove-scroll-bar_2.3.8_1734228508491_0.5531994800882876"
+  },
+  "_hasShrinkwrap": false
+}

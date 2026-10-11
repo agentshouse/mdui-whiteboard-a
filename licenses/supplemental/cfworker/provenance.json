@@ -1,0 +1,16 @@
+[
+  {
+    "name": "@cfworker/json-schema",
+    "version": "4.1.1",
+    "declaredLicense": "MIT",
+    "licenseFile": "licenses/supplemental/cfworker/LICENSE.txt",
+    "sha256": "376944252ab78ca6b41aee44ddea8894927ee67891e77e61eb9d59af63e35094",
+    "sourceUrl": "https://github.com/cfworker/cfworker/blob/5409fdc2bd144f68e8b28c61c71fcb16600000a6/LICENSE.md",
+    "commit": "5409fdc2bd144f68e8b28c61c71fcb16600000a6",
+    "registryGitHead": "5409fdc2bd144f68e8b28c61c71fcb16600000a6",
+    "verification": "npm view @cfworker/json-schema@4.1.1 gitHead identifies this commit; official annotated @cfworker/json-schema@4.1.1 tag peels to the same commit. packages/json-schema/package.json at the commit confirms name and version 4.1.1. Root MIT LICENSE.md applies to that source package.",
+    "packageManifestUrl": "https://github.com/cfworker/cfworker/blob/5409fdc2bd144f68e8b28c61c71fcb16600000a6/packages/json-schema/package.json",
+    "licenseBlobSha": "85bcd787b59cba04d1c533d8b3b276e96465983d",
+    "retrievedAt": "2026-10-11"
+  }
+]

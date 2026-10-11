@@ -1,0 +1,23 @@
+{
+  "name": "@radix-ui/react-use-rect",
+  "version": "1.1.1",
+  "license": "MIT",
+  "gitHead": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+  "repository": {
+    "url": "git+https://github.com/radix-ui/primitives.git",
+    "type": "git"
+  },
+  "dist": {
+    "shasum": "01443ca8ed071d33023c1113e5173b5ed8769152",
+    "tarball": "https://registry.npmjs.org/@radix-ui/react-use-rect/-/react-use-rect-1.1.1.tgz",
+    "fileCount": 8,
+    "integrity": "sha512-QTYuDesS0VtuHNNvMh+CjlKJ4LJickCMUAqjlE3+j8w+RlRpwyX3apEQKGFzbZGdo7XNG1tXa+bQqIE7HIXT2w==",
+    "signatures": [
+      {
+        "sig": "MEYCIQDoGLjVasNjgaadaifaNcgs1ckO5mIerMPUh6JysVX56wIhAIuNNg3c89nz6SqFJR+e2P5iD4FNBok4mPnitKpkcNWC",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "unpackedSize": 7286
+  }
+}

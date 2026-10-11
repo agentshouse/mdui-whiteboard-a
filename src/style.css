@@ -1,0 +1,30 @@
+html, body, #root { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+* { box-sizing: border-box; }
+body { font-family: Assistant, system-ui, sans-serif; color: #1b1b1f; background: #fff; }
+.whiteboard-app { height: 100dvh; display: flex; flex-direction: column; min-width: 0; }
+.document-bar { z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 12px; border-bottom: 1px solid #e4e4e7; background: #fff; }
+.app-name { font-weight: 700; font-size: 16px; margin-right: 6px; }
+.document-bar input, .document-bar select, .document-bar button, .empty-state button { min-width: 0; height: 32px; padding: 4px 9px; font: inherit; font-size: 13px; border: 1px solid #e4e4e7; border-radius: 6px; background: #fff; color: #27272a; }
+.document-bar input { width: 150px; flex: 1 1 120px; max-width: 250px; }
+.document-bar select { max-width: 190px; text-overflow: ellipsis; }
+.document-bar select[aria-label='Room for new drawings'] { max-width: 150px; }
+.document-bar button, .empty-state button { cursor: pointer; }
+.document-bar .primary { background: #6965db; border-color: #6965db; color: white; }
+button:disabled { opacity: .45; cursor: default; }
+button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid #6965db; outline-offset: 2px; }
+.sync-status { margin-left: auto; font-size: 12px; color: #71717a; }
+.editor { flex: 1; min-height: 0; position: relative; }
+.empty-state { height: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 24px; text-align: center; color: #71717a; }
+.empty-state h1 { color: #27272a; font-size: 28px; margin-bottom: 0; }
+.notice { padding: 8px 14px; font-size: 13px; color: #6b4a00; background: #fff8db; overflow-wrap: anywhere; }
+.notice.error { background: #fef2f2; color: #991b1b; }
+.notice button { float: right; border: 0; background: none; color: inherit; cursor: pointer; }
+@media(max-width: 600px) {
+ .document-bar { padding: 6px 8px; gap: 4px; }
+ .app-name { font-size: 14px; }
+ .document-bar select { max-width: 160px; flex: 1; }
+ .document-bar input { flex-basis: calc(100% - 76px); max-width: none; order: 2; }
+ .document-bar select[aria-label='Room for new drawings'] { max-width: 100px; }
+ .document-bar button { padding: 4px 7px; }
+ .sync-status { order: 3; width: 100%; margin-left: 0; }
+}

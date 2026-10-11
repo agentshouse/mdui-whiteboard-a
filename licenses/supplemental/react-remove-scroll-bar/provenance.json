@@ -1,0 +1,23 @@
+[
+  {
+    "name": "react-remove-scroll-bar",
+    "version": "2.3.8",
+    "declaredLicense": "MIT",
+    "licenseFile": "licenses/supplemental/react-remove-scroll-bar/LICENSE.txt",
+    "sha256": "a79aae0c0f21990d9d963bb3c5a79cdcea9a46f8523ba55c58d7fe776b6ebc84",
+    "sourceUrl": "https://github.com/theKashey/react-remove-scroll-bar/blob/7301c160fda44cb8cf2b9fdfde61efad35736196/LICENSE",
+    "commit": "7301c160fda44cb8cf2b9fdfde61efad35736196",
+    "registryGitHead": "b3b1287aad81def2e2ae707274b74531b61ddbaf",
+    "verification": "The published 2.3.8 gitHead is unavailable in the official repository (GitHub returned 404; no matching commit found). All 26 non-package.json files in official npm 2.3.8 are byte-identical to official npm 2.3.7; package.json differs only in version and react-style-singleton dependency range. Exact npm 2.3.7 gitHead and official v2.3.7 tag resolve to 29e9fcd1eecf7d3b77a767941c4a57fe461fc1e4. Its entire src tree a860502e80cf620578d6517606da4ff12e8937d4 is identical to the src tree at official commit 7301c160fda44cb8cf2b9fdfde61efad35736196, which added the full MIT license. This exact later grant covers the unchanged source; no version-2.3.8 license text was fabricated. Full artifact comparison and registry metadata are retained alongside.",
+    "equivalentPackageVersion": "2.3.7",
+    "equivalentPackageGitHead": "29e9fcd1eecf7d3b77a767941c4a57fe461fc1e4",
+    "identicalSourceTree": "a860502e80cf620578d6517606da4ff12e8937d4",
+    "licenseGitBlob": "7c08c3990396ecefd90f99ff5d9a34f26f5b5616",
+    "artifactComparison": "licenses/supplemental/react-remove-scroll-bar/artifact-comparison.json",
+    "registryMetadataFiles": [
+      "licenses/supplemental/react-remove-scroll-bar/npm-2.3.7.json",
+      "licenses/supplemental/react-remove-scroll-bar/npm-2.3.8.json"
+    ],
+    "retrievedAt": "2026-10-11"
+  }
+]

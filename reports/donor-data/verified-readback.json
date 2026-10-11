@@ -1,0 +1,62 @@
+[
+  {
+    "path": "/rooms/whiteboard-port/drawings/launch-plan.md",
+    "expected_sha256": "c4aaff95737e5e4275e29f22940d3d986453f42e7effae17bb3558ce82e868a8",
+    "equal": true
+  },
+  {
+    "path": "/rooms/whiteboard-port/drawings/workshop-notes.md",
+    "expected_sha256": "b1389d87b67b8eca1980333313c1e9a5cd14e0d87616dba858e350e6df1afc6a",
+    "equal": true
+  },
+  {
+    "path": "/rooms/whiteboard-port/drawings/dashboard-wireframe.md",
+    "expected_sha256": "4756b98a0ecdebbfbb4c98b66f86f18a2fe0f34e4cff847d05f373229c183ed0",
+    "equal": true
+  },
+  {
+    "path": "/rooms/whiteboard-port/drawings/support-flow.md",
+    "expected_sha256": "d4a24e7863d58106d6ed00b21d34e4858910c73d105a21bdc9f37f42f38e0096",
+    "equal": true
+  },
+  {
+    "path": "/rooms/whiteboard-port/drawings/team-map.md",
+    "expected_sha256": "d737a825d728e95704e35553ddf19c2a05406142f0c2e5600ff357c61354b219",
+    "equal": true
+  },
+  {
+    "path": "/rooms/whiteboard-port/drawings/donor-library-1.md",
+    "expected_sha256": "fee80bc153f2d2b02b3887563d63ca1fdcbf25ee9a5457bb942b04b87b83f44c",
+    "equal": true
+  },
+  {
+    "path": "/rooms/whiteboard-port/drawings/donor-library-2.md",
+    "expected_sha256": "de2ac132261609c6da6a6e1fcd6844f69d553d8d1b80497f2491192c6d322989",
+    "equal": true
+  },
+  {
+    "path": "/rooms/whiteboard-port/drawings/donor-library-3.md",
+    "expected_sha256": "f941ceb1a68b1e6810578e40d286272f4713fac4c442b934d414be2b8e59f739",
+    "equal": true
+  },
+  {
+    "path": "/rooms/whiteboard-port/drawings/donor-library-4.md",
+    "expected_sha256": "4a6ef114e00b9d237166f896545d1844cf28c97e16ebe9e02db0cfa2e100ded0",
+    "equal": true
+  },
+  {
+    "path": "/rooms/whiteboard-port/drawings/donor-library-5.md",
+    "expected_sha256": "97b23fd13cf47725d05b90a7d4e4daa611db83595ddfc28c364177d3e86002d7",
+    "equal": true
+  },
+  {
+    "path": "/rooms/whiteboard-port/drawings/donor-library-6.md",
+    "expected_sha256": "974a78234acb4690271fee39468f337bb7dc4dbf419cf3fb19337e51462cf4c9",
+    "equal": true
+  },
+  {
+    "path": "/rooms/whiteboard-port/drawings/donor-library-7.md",
+    "expected_sha256": "6925b25f119aa4b1add168592af31bd987e0b4cdf5948267c1343f5b3fef77d1",
+    "equal": true
+  }
+]
