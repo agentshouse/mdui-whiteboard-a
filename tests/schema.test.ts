@@ -9,9 +9,10 @@ test('current JSON Schema keeps slot types, exact IDs and closed-object validati
   assert.equal(result.verdict, 'accept');
   if (result.verdict !== 'accept') throw new Error(JSON.stringify(result));
   const manifest = JSON.parse(readFileSync(new URL('../app.json', import.meta.url), 'utf8'));
-  assert.deepEqual(Object.keys(result.model.types).sort(), [...new Set(manifest.room_slots.flatMap((slot: { types: string[] }) => slot.types))].sort());
+  assert.deepEqual(Object.keys(result.model.types).sort(), ['drawing', 'quickdraw_drawing']);
+  assert.deepEqual(manifest.room_slots.flatMap((slot: { types: string[] }) => slot.types), ['drawing']);
   assert(!/^types:/m.test(source));
-  for (const [name, type] of Object.entries(result.model.types)) {
+  for (const [name, type] of Object.entries(result.model.types).filter(([name]) => name === 'drawing')) {
     assert.equal(type.fields.id?.type, 'string', name);
     assert.equal(type.fields.id?.prose, false, `${name}: IDs must remain exact-match values`);
     const shape = type.shape.schema as { properties: Record<string, { type?: string; enum?: unknown[] }>; required: string[] };

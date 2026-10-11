@@ -11,5 +11,6 @@ const bytes = files.reduce((sum,file)=>sum+file.bytes,0);
 const lock = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, 'package-lock.probe.json')));
 const packageVersion = (name) => { const entry = Object.entries(lock.packages).find(([key]) => key.endsWith('node_modules/' + name)); if(!entry) throw new Error('Missing probe dependency: ' + name); return entry[1].version; };
 const result = { bytes, mebibytes:bytes/(1024*1024), files:files.length, baselineBytes:18726413, additionalBytes:bytes-18726413, limitBytes:20*1024*1024, excessBytes:Math.max(0,bytes-20*1024*1024), packages:Object.fromEntries(['@excalidraw/mermaid-to-excalidraw','mermaid','@mermaid-js/parser'].map(name=>[name,packageVersion(name)])), largestFiles:files.sort((a,b)=>b.bytes-a.bytes).slice(0,20) };
-fs.writeFileSync(path.join(import.meta.dirname,'size-result.json'),JSON.stringify(result,null,2)+'\n');
+fs.mkdirSync(path.join(root, '.build'), {recursive:true});
+fs.writeFileSync(path.join(root,'.build/mermaid-size-result.json'),JSON.stringify(result,null,2)+'\n');
 console.log(JSON.stringify(result,null,2));

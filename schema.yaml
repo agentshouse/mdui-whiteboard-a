@@ -17,3 +17,15 @@ drawing:
   sections:
     Scene:
       kind: text
+
+quickdraw_drawing:
+  type: object
+  properties:
+    title: { type: string }
+    content: { type: string }
+    archived: { type: boolean }
+    source_url: { type: string }
+    source_revision: { type: string }
+    author: { type: string }
+    license: { type: string }
+  required: [title, content, archived, source_url, source_revision, author, license]

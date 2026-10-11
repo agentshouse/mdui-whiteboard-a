@@ -1,23 +1,17 @@
-# Whiteboard
+# Whiteboard A
 
-Hand-drawn style diagrams and sketches on an open canvas.
+Sketch, draw shapes, add text and arrange a canvas with local fonts, scene import/export and image export. Room documents use native Draft/Save with explicit synchronization status and conflict handling.
 
-An [agents.house](https://agents.house) Template: an App over one Room. `schema.yaml` is
-the Room's schema, `starter/` holds the documents a new Room starts with and `demo/` the
-documents of its demo Site.
+## Build and publish
 
-## Build
+Use Node >=24.21 and npm. Run `npm ci`, then `npm run verify` for type checks, lint, tests, provenance/security validation and a complete `dist/` build.
 
-```sh
-npm ci
-npm run build
-```
+Configure `origin` to your House App HTTPS Git URL. Deliberately commit source changes on `main`, then run `npm run publish`. Publishing requires a clean source tree, repeats verification, and atomically pushes source and a parentless built release. It never stages or commits source changes. The command reports both commit IDs; House advertises only `main`, so verify App admission separately before claiming a current hosted release. GitHub publication is separate.
 
-## Publish
+## Starter and shared schema
 
-Commit your change, then run `npm run publish`. It builds, then pushes `main` and the build,
-as one new commit without parents on `release`, to `origin`.
+`starter/` contains the same existing licensed example in two separate editable representations: `drawings/` for Whiteboard A and `quickdraw/` for Whiteboard B. Both templates carry identical union schemas and starter bytes. Each App reads only its own type. Changes in one representation do not synchronize with the other. Copy the starter documents preserving their relative paths when setting up a Room; publishing does not modify Room data.
 
-## License
+## Scope and licenses
 
-See the license files beside this README.
+No collaboration services, remote media imports, external data services or browser-storage fallback. Local automated checks do not establish hosted browser acceptance. Source and dependency attribution, original license grants and provenance are retained in `LICENSE`, `licenses/`, source headers and distributed notice files. Test inputs remain under `tests/support/`.

@@ -7,12 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/*.test.ts",
+    "test": "node --test --test-concurrency=1 tests/*.test.ts",
     "prebuild": "node scripts/prepare-release.mjs",
     "release:check": "node scripts/check-release.mjs",
     "notices": "node scripts/generate-notices.mjs",
     "lint": "eslint src scripts/*.mjs tests/*.test.ts tests/mermaid-feasibility/*.mjs",
     "license:check": "node scripts/check-licenses.mjs",
+    "template:check": "node scripts/check-template.mjs",
+    "verify": "npm run typecheck && npm run lint && npm test && npm run template:check && npm run build && npm run release:check && npm run license:check",
     "publish": "node publish.mjs"
   },
   "dependencies": {
