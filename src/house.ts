@@ -1,9 +1,9 @@
 export { useObserve } from "@agentshouse/mdruntime/react";
-import { connectHouseBridge } from '@agentshouse/app-bridge'
+import { houseBridge as getHouseBridge } from '@agentshouse/app-bridge'
 
 // House owns storage, authorization, synchronization, and the Runtime host.
 // The host supplies its connected Runtime client through the bridge.
-export type HouseRuntime = Awaited<ReturnType<typeof connectHouseBridge>['runtime']>
+export type HouseRuntime = Awaited<ReturnType<typeof getHouseBridge>['runtime']>
 export type HouseRoom = Awaited<ReturnType<HouseRuntime['rooms']>>[number]
 export type Drawing = {
   room: string
@@ -32,8 +32,8 @@ type DocumentResult = {
   }[]
 }
 
-let bridge:ReturnType<typeof connectHouseBridge>|undefined
-export function houseBridge(){if(!bridge){bridge=connectHouseBridge();bridge.setTab({title:'Whiteboard'})}return bridge}
+let bridge:ReturnType<typeof getHouseBridge>|undefined
+export function houseBridge(){if(!bridge){bridge=getHouseBridge();bridge.setTab({title:'Whiteboard'})}return bridge}
 let connection: Promise<HouseRuntime> | undefined
 export function houseRuntime(): Promise<HouseRuntime> {
   connection ??= (async () => {

@@ -19,7 +19,7 @@
     "test:publisher": "node --test scripts/publish-regression.mjs"
   },
   "dependencies": {
-    "@agentshouse/app-bridge": "0.1.0-ce524f6608238",
+    "@agentshouse/app-bridge": "0.1.0-ca4ec913df08d",
     "@agentshouse/mdruntime": "0.1.0-cff8ba8fa2542",
     "@braintree/sanitize-url": "6.0.2",
     "@codemirror/commands": "^6.0.0",
