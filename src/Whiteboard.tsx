@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { DrawingNavigation, type DrawingTarget } from './navigation';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useObserve } from './house';
 import { DraftSession } from './draft-session';
 import { DrawingDraftInput } from './drawing-draft-input';
@@ -6,7 +7,7 @@ import { Excalidraw, MainMenu, restoreElements } from '@excalidraw/excalidraw';
 import type { ExcalidrawInitialDataState } from '@excalidraw/excalidraw/types';
 import type { AppState, BinaryFiles, ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/types';
 import type { OrderedExcalidrawElement } from '@excalidraw/element/types';
-import { houseRuntime, observeDrawings, observeRoomDrafts, observeStorageLoss, observeConnectionRefusal, observeServiceMode, readDrawings, parseScene, serializeScene, createDrawing, deleteDrawing, type Drawing, type Scene, type HouseRuntime } from './house';
+import { houseBridge, houseRuntime, observeDrawings, observeRoomDrafts, observeStorageLoss, observeConnectionRefusal, observeServiceMode, readDrawings, parseScene, serializeScene, createDrawing, deleteDrawing, type Drawing, type Scene, type HouseRuntime } from './house';
 
 const EMPTY: Scene = { elements: [], appState: { viewBackgroundColor: '#ffffff' }, files: {} };
 const keyOf = (drawing: Drawing) => `${drawing.room}/${drawing.path}`;
@@ -16,7 +17,11 @@ function sceneFromEditor(elements: readonly OrderedExcalidrawElement[], appState
   const imageIds = new Set<string>(active.flatMap(element => element.type === 'image' && element.fileId ? [element.fileId] : []));
   return { elements: active.map(element => ({...element, link: null})), appState: { viewBackgroundColor: appState.viewBackgroundColor, gridSize: appState.gridSize, gridStep: appState.gridStep }, files: Object.fromEntries(Object.entries(files).filter(([id]) => imageIds.has(id))) };
 }
-export function Whiteboard({ ownerDocument }: { ownerDocument: Document }) {
+export function Whiteboard({ ownerDocument, navigation: suppliedNavigation }: { ownerDocument: Document; navigation?: DrawingNavigation | null }) {
+  const navigation=useMemo(()=>suppliedNavigation===undefined?new DrawingNavigation(houseBridge()):suppliedNavigation,[suppliedNavigation]);
+  const [route,setRoute]=useState(()=>navigation?.snapshot()??{target:null,ready:true,error:null});
+  const navigationGeneration=useRef(0);
+
   const [runtime, setRuntime] = useState<HouseRuntime | null>(null);
   const runtimeRef = useRef<HouseRuntime | null>(null);
   const sessions = useRef(new Map<string, DraftSession>());
@@ -115,6 +120,24 @@ export function Whiteboard({ ownerDocument }: { ownerDocument: Document }) {
     } catch (error) { if (opening.current === token) setError(errorText(error)); }
     finally { if (opening.current === token) openingKey.current = ''; }
   };
+  const navigateDrawing=(drawing:DrawingTarget|null,replace=false)=>{
+    navigationGeneration.current++;
+    if(navigation)navigation.navigate(drawing,replace);
+    else if(drawing){const found=drawings.find(value=>keyOf(value)===`${drawing.room}/${drawing.path}`);if(found)void openDrawing(found);}
+  };
+  useEffect(()=>{
+    if(!navigation)return;
+    let prior=JSON.stringify(navigation.snapshot().target);
+    const apply=()=>{const next=navigation.snapshot(),identity=JSON.stringify(next.target);setRoute(next);if(identity!==prior){prior=identity;navigationGeneration.current++;opening.current++;openingKey.current='';sessionUnsubscribe.current?.();currentSession.current=null;selectedRef.current=null;setSelected(null);setInitialData(undefined);changeDirty(false);}};
+    const off=navigation.subscribe(apply);apply();return off;
+  },[navigation]);
+  useEffect(()=>{
+    if(!navigation||!route.ready||route.error||!loaded||!room)return;
+    const target=route.target;
+    if(!target){const first=drawings.find(drawing=>drawing.room===room);if(first)navigation.navigate({room:first.room,path:first.path},true);return;}
+    const wanted=drawings.find(drawing=>drawing.room===room&&drawing.room===target.room&&drawing.path===target.path);
+    if(wanted&&(!selectedRef.current||keyOf(selectedRef.current)!==keyOf(wanted))&&openingKey.current!==keyOf(wanted))void openDrawing(wanted);
+  },[navigation,route,loaded,room,drawings]);
   const keepDraft = (kind: 'scene' | 'title', previous = currentScene.current) => {
     const drawing = selectedRef.current, session = currentSession.current;
     if (!drawing || !session) return;
@@ -150,7 +173,7 @@ export function Whiteboard({ ownerDocument }: { ownerDocument: Document }) {
           try {
             const next = readDrawings(value); setDrawings(next); setLoaded(true);
             const open = selectedRef.current;
-            if (!open && next[0] && openingKey.current !== keyOf(next[0])) void openDrawing(next[0]);
+            if (!navigation && !open && next[0] && openingKey.current !== keyOf(next[0])) void openDrawing(next[0]);
             else if (open) {
               const update = next.find(drawing => keyOf(drawing) === keyOf(open));
               if (!update) { setAttention('This drawing was removed from its Room. Your current canvas is still open; export it to a local file before closing.'); }
@@ -173,23 +196,26 @@ export function Whiteboard({ ownerDocument }: { ownerDocument: Document }) {
   const act = async (work: () => Promise<void>) => { if (busyRef.current) return; busyRef.current = true; setBusy(true); setError(''); try { await work(); } catch(e) { setError(errorText(e)); } finally { busyRef.current = false; setBusy(false); } };
   const save = () => act(async () => {
     if (!runtime || !selectedRef.current || unavailable || selectedRef.current.room !== room) return;
+    const savingDrawing = selectedRef.current;
+    const savingGeneration = navigationGeneration.current;
     const savingScene = currentScene.current;
     const savingTitle = titleRef.current;
     const savingText = serializeScene(savingScene);
     const session = currentSession.current;
     if (!session) return;
-    const input = drawingInput(session, selectedRef.current);
+    const input = drawingInput(session, savingDrawing);
     await input.flush();
     const updatedAt = new Date().toISOString();
-    await session.stage({ fields: { updated_at: { value: updatedAt, base: { value: selectedRef.current.updated_at } } } });
+    await session.stage({ fields: { updated_at: { value: updatedAt, base: { value: savingDrawing.updated_at } } } });
     await input.flush();
     await session.commit();
-    const drawing = { ...selectedRef.current, title: savingTitle, updated_at: updatedAt, sceneText: savingText };
+    if(navigationGeneration.current!==savingGeneration||selectedRef.current===null||keyOf(selectedRef.current)!==keyOf(savingDrawing))return;
+    const drawing = { ...savingDrawing, title: savingTitle, updated_at: updatedAt, sceneText: savingText };
     selectedRef.current = drawing; setSelected(drawing);
     baseline.current = savingText; changeDirty(serializeScene(currentScene.current) !== savingText || titleRef.current !== savingTitle);
   });
-  const makeNew = () => { if (!runtime || !room || unavailable) return; void act(async () => { const result = await createDrawing(runtime, room, 'Untitled drawing', EMPTY); await openDrawing(result.drawing); }); };
-  const remove = () => { if (!runtime || !selected || unavailable || selected.room !== room || !ownerDocument.defaultView?.confirm(`Delete “${selected.title}” from its Room?`)) return; void act(async () => { await deleteDrawing(runtime, selected); selectedRef.current = null; setSelected(null); setInitialData(undefined); changeDirty(false); }); };
+  const makeNew = () => { if (!runtime || !room || unavailable) return; void act(async () => { const generation=navigationGeneration.current;const result = await createDrawing(runtime, room, 'Untitled drawing', EMPTY);setDrawings(previous=>previous.some(d=>keyOf(d)===keyOf(result.drawing))?previous:[...previous,result.drawing]);if(generation!==navigationGeneration.current)return;if(navigation)navigateDrawing(result.drawing);else await openDrawing(result.drawing); }); };
+  const remove = () => { if (!runtime || !selected || unavailable || selected.room !== room || !ownerDocument.defaultView?.confirm(`Delete “${selected.title}” from its Room?`)) return; const removed=selected,generation=navigationGeneration.current;void act(async () => { await deleteDrawing(runtime, removed);if(generation!==navigationGeneration.current)return;setDrawings(previous=>previous.filter(d=>keyOf(d)!==keyOf(removed)));if(navigation)navigateDrawing(null,true); selectedRef.current = null; setSelected(null); setInitialData(undefined); changeDirty(false); }); };
   const onChange = (elements: readonly OrderedExcalidrawElement[], state: AppState, files: BinaryFiles) => {
     try {
       if (sharedUpdate.current) return;
@@ -204,12 +230,13 @@ export function Whiteboard({ ownerDocument }: { ownerDocument: Document }) {
     } catch(e) { changeDirty(true); setError(errorText(e)); }
   };
   const bindingError = !synced || rooms === undefined || rooms.length === 1 ? '' : rooms.length > 1 ? 'Whiteboard received multiple data bindings. Check this App’s configuration in House.' : 'Bind a drawings Room to this App in House.';
-  const unavailable = !room || !!refused || storageLost;
+  const routeError=route.error||(navigation&&route.ready&&route.target&&loaded&&room&&!drawings.some(d=>d.room===room&&d.room===route.target?.room&&d.path===route.target.path)?'This drawing is unavailable in the connected Room.':'');
+  const unavailable = !room || !!refused || storageLost || !!routeError || !route.ready;
   const syncAttention = sync?.attentionRequired.length ? 'House returned changes that need attention. Your Room drafts are preserved; resolve them in House before saving again.' : '';
   return <main className="whiteboard-app">
     <header className="document-bar">
       <span className="app-name">Whiteboard</span>
-      <select aria-label="Open drawing" value={selected ? keyOf(selected) : ''} disabled={busy || !loaded} onChange={event => { const drawing = drawings.find(d=>keyOf(d)===event.target.value); if(drawing) void openDrawing(drawing); }}>
+      <select aria-label="Open drawing" value={selected ? keyOf(selected) : ''} disabled={busy || !loaded} onChange={event => { const drawing = drawings.find(d=>keyOf(d)===event.target.value); if(drawing) navigateDrawing(drawing); }}>
         <option value="" disabled>Choose a drawing</option>
         {drawings.map(drawing=><option key={keyOf(drawing)} value={keyOf(drawing)}>{drawing.title}</option>)}
       </select>
@@ -219,7 +246,7 @@ export function Whiteboard({ ownerDocument }: { ownerDocument: Document }) {
       <button onClick={remove} disabled={!selected || busy || unavailable || selected.room !== room} aria-label="Delete drawing">Delete</button>
     </header>
     {writeHalted && <div className="notice" role="status">House publishing is paused. Local drafts and Saves still work; queued changes submit when writes reopen.</div>}
-    {(bindingError||refused||error) && <div className="notice error" role="alert">{bindingError||refused||error}</div>}
+    {(bindingError||refused||error||routeError) && <div className="notice error" role="alert">{bindingError||refused||error||routeError}</div>}
     {!synced && <div className="notice" role="status">Loading…</div>}
     {syncAttention && <div className="notice" role="status">{syncAttention}</div>}
     {attention && <div className="notice" role="status">{attention}<button onClick={()=>setAttention('')} aria-label="Dismiss notice">×</button></div>}

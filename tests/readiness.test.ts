@@ -22,7 +22,7 @@ globals.HTMLElement = browser.HTMLElement;
 globals.IS_REACT_ACT_ENVIRONMENT = true;
 const harness = globals.__whiteboardHarness = { observations: new Map<string, Observation>(), mounts: 0, runtime: {}, drafts: new Map<string, any>(), writes: 0, saves: 0 };
 const compiled = path.resolve('tests/.readiness-ui.mjs');
-let Whiteboard: React.ComponentType<{ ownerDocument: Document }>;
+let Whiteboard: React.ComponentType<{ ownerDocument: Document; navigation?: any }>;
 let root: Root;
 let container: HTMLDivElement;
 before(async () => {
@@ -54,7 +54,7 @@ before(async () => {
   Whiteboard = (await import(pathToFileURL(compiled).href)).Whiteboard;
 });
 after(async () => { await fs.rm(compiled, { force: true }); await browser.happyDOM.close(); });
-async function mount(rooms: any[], lastCompleted: string | null, reload = false) {
+async function mount(rooms: any[], lastCompleted: string | null, reload = false, navigation: any = null) {
   if (!reload) { harness.drafts.clear(); harness.writes = 0; harness.saves = 0; }
   harness.observations.clear(); harness.mounts = 0;
   const drawing = {room:'r_board',path:'drawings/one.md',fields:{id:'drawing-one',title:'Existing drawing',updated_at:'2026-10-11T13:00:00Z'},sections:{Scene:JSON.stringify({elements:[],appState:{viewBackgroundColor:'#fff'},files:{}})}};
@@ -73,7 +73,7 @@ async function mount(rooms: any[], lastCompleted: string | null, reload = false)
     save: async (_room: string, entries: any[]) => { harness.saves++; for (const entry of entries) harness.drafts.delete(entry.path); harness.observations.get('room-drafts')!.emit([...harness.drafts.values()]); return {outcome:'saved',identifier:'queued'}; },
   };
   container = document.createElement('div'); document.body.append(container); root = createRoot(container);
-  await act(async () => { root.render(React.createElement(Whiteboard,{ownerDocument:document})); });
+  await act(async () => { root.render(React.createElement(Whiteboard,{ownerDocument:document,navigation})); });
 }
 async function emit(topic: string, value: any) { await act(async () => { harness.observations.get(topic)!.emit(value); }); }
 async function unmount() { await act(async () => root.unmount()); container.remove(); }
@@ -180,4 +180,33 @@ test('Whiteboard Save cannot consume a failed canvas via its later timestamp wri
     assert.ok(harness.drafts.get('drawings/one.md').parts.sections.Scene.value.includes('rectangle-1'));
     await act(async () => button('Save').click()); assert.equal(harness.saves,1);
   } finally { await unmount(); }
+});
+
+function navigationFixture(target: any){
+ let state={target,ready:true,error:null};const listeners=new Set<()=>void>(),calls:any[]=[];
+ const host={snapshot:()=>state,subscribe:(fn:()=>void)=>{listeners.add(fn);return()=>listeners.delete(fn);},navigate:(next:any,replace=false)=>{calls.push({target:next,replace});host.open(next);},open:(next:any)=>{state={...state,target:next};listeners.forEach(fn=>fn());},calls};return host;
+}
+function secondDrawing(){return {room:'r_board',path:'drawings/two.md',fields:{id:'drawing-two',title:'Second drawing',updated_at:'2026-10-11T13:00:00Z'},sections:{Scene:JSON.stringify({elements:[],appState:{viewBackgroundColor:'#fff'},files:{}})}};}
+test('cold drawing address waits for its document; Back and reload preserve exact native draft with no save',async()=>{
+ const nav=navigationFixture({room:'r_board',path:'drawings/two.md'});
+ try{
+  await mount(rooms,'now',false,nav);assert.equal(container.querySelector('[aria-label="Canvas draft"]'),null);assert.match(container.textContent!,/unavailable/);
+  const one=harness.observations.get('query')!.current().documents[0],two=secondDrawing();await emit('query',{documents:[one,two]});
+  assert.equal(container.querySelector<HTMLInputElement>('[aria-label="Drawing title"]')!.value,'Second drawing');
+  const input=container.querySelector<HTMLInputElement>('[aria-label="Canvas draft"]')!;await act(async()=>{input.value='Retained draft';input.dispatchEvent(new browser.Event('input',{bubbles:true}) as unknown as Event);});
+  await act(async()=>nav.open({room:'r_board',path:'drawings/one.md'}));assert.equal(container.querySelector<HTMLInputElement>('[aria-label="Canvas draft"]')!.value,'');
+  await act(async()=>nav.open({room:'r_board',path:'drawings/two.md'}));assert.equal(container.querySelector<HTMLInputElement>('[aria-label="Canvas draft"]')!.value,'Restored sketch');
+  assert.equal(harness.saves,0);assert.equal(nav.calls.length,0);
+  await unmount();await mount(rooms,'now',true,nav);await emit('query',{documents:[one,two]});assert.equal(container.querySelector<HTMLInputElement>('[aria-label="Canvas draft"]')!.value,'Restored sketch');assert.equal(harness.saves,0);
+ }finally{await unmount();}
+});
+test('older Save completion cannot reselect or overwrite the newer drawing',async()=>{
+ const nav=navigationFixture({room:'r_board',path:'drawings/one.md'});
+ try{
+  await mount(rooms,'now',false,nav);const one=harness.observations.get('query')!.current().documents[0];await emit('query',{documents:[one,secondDrawing()]});
+  const input=container.querySelector<HTMLInputElement>('[aria-label="Canvas draft"]')!;await act(async()=>{input.value='Save this one';input.dispatchEvent(new browser.Event('input',{bubbles:true}) as unknown as Event);});
+  const runtime=harness.runtime as any,save=runtime.save;let release:()=>void=()=>{};runtime.save=async(...args:any[])=>{await new Promise<void>(resolve=>{release=resolve;});return save(...args);};
+  await act(async()=>button('Save').click());await act(async()=>nav.open({room:'r_board',path:'drawings/two.md'}));await act(async()=>release());
+  assert.equal(container.querySelector<HTMLInputElement>('[aria-label="Drawing title"]')!.value,'Second drawing');assert.equal(container.querySelector<HTMLInputElement>('[aria-label="Canvas draft"]')!.value,'');assert.equal(harness.saves,1);
+ }finally{await unmount();}
 });

@@ -32,14 +32,15 @@ type DocumentResult = {
   }[]
 }
 
+let bridge:ReturnType<typeof connectHouseBridge>|undefined
+export function houseBridge(){if(!bridge){bridge=connectHouseBridge();bridge.setTab({title:'Whiteboard'})}return bridge}
 let connection: Promise<HouseRuntime> | undefined
 export function houseRuntime(): Promise<HouseRuntime> {
   connection ??= (async () => {
-    const bridge = connectHouseBridge()
-    bridge.setTab({ title: 'Whiteboard' })
-    return bridge.runtime
+    return houseBridge().runtime
   })().catch((error: unknown) => {
     connection = undefined
+    bridge = undefined
     throw error
   })
   return connection
