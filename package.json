@@ -8,7 +8,7 @@
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "test": "node --test --test-concurrency=1 tests/*.test.ts",
-    "prebuild": "node scripts/prepare-release.mjs",
+    "prebuild": "node scripts/prepare-fonts.mjs && node scripts/prepare-release.mjs",
     "release:check": "node scripts/check-release.mjs",
     "notices": "node scripts/generate-notices.mjs",
     "lint": "eslint src scripts/*.mjs tests/*.test.ts tests/mermaid-feasibility/*.mjs",
@@ -16,7 +16,8 @@
     "template:check": "node scripts/check-template.mjs",
     "verify": "npm run test:publisher && npm run typecheck && npm run lint && npm test && npm run template:check && npm run build && npm run release:check && npm run license:check",
     "publish": "node publish.mjs",
-    "test:publisher": "node --test scripts/publish-regression.mjs"
+    "test:publisher": "node --test scripts/publish-regression.mjs",
+    "predev": "node scripts/prepare-fonts.mjs"
   },
   "dependencies": {
     "@agentshouse/app-bridge": "0.1.0-ca4ec913df08d",
@@ -59,6 +60,7 @@
   "devDependencies": {
     "@agentshouse/mdmodel": "0.1.0-c68e2039f1ca8",
     "@eslint/js": "10.0.1",
+    "@excalidraw/excalidraw": "0.18.0",
     "@types/lodash.debounce": "4.0.8",
     "@types/lodash.throttle": "4.1.7",
     "@types/node": "25.6.0",
@@ -76,5 +78,8 @@
     "typescript-eslint": "8.58.2",
     "vite": "5.4.21",
     "vite-plugin-svgr": "4.2.0"
+  },
+  "overrides": {
+    "nanoid": "$nanoid"
   }
 }
