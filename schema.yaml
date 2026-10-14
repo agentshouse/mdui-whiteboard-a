@@ -1,0 +1,31 @@
+# House JSON Schema (draft 2020-12). Unconstrained patterns keep identifiers,
+# dates and serialized scalar data exact-match without changing accepted values.
+drawing:
+  properties:
+    id:
+      type: string
+      pattern: ^[\s\S]*$
+    title:
+      type: string
+    updated_at:
+      type: string
+      pattern: ^[\s\S]*$
+  required:
+  - id
+  - title
+  - updated_at
+  sections:
+    Scene:
+      kind: text
+
+quickdraw_drawing:
+  type: object
+  properties:
+    title: { type: string }
+    content: { type: string }
+    archived: { type: boolean }
+    source_url: { type: string }
+    source_revision: { type: string }
+    author: { type: string }
+    license: { type: string }
+  required: [title, content, archived, source_url, source_revision, author, license]
