@@ -2,7 +2,7 @@
 
 These source copies fill missing package-root notice files in the installed production dependency closure. Build scripts verify exact package/version mapping, immutable official source links, copyright text and SHA-256 before including the full text in THIRD_PARTY_NOTICES.txt. Provenance is also distributed as licenses/SUPPLEMENTAL-PROVENANCE.json.
 
-No package license was inferred from its identifier alone. The known @agentshouse/app-bridge UNLICENSED package remains unresolved; this directory does not supply or invent a grant for it.
+Original recovered notices remain byte-exact. One separately labelled declaration-based entry follows Master’s 2026-10-13 tooling decision: use-composed-ref 1.4.0 declares MIT but supplies no notice or author in its package or pinned source. Its entry includes pinned standard SPDX text with unchanged placeholders and records the missing holder; it is not an original package copyright notice. Packages without a declared license remain unresolved. The current bridge package declares MIT and includes its own notice.
 
 ## Source verification
 
@@ -11,3 +11,5 @@ No package license was inferred from its identifier alone. The known @agentshous
 - react-remove-scroll-bar 2.3.8: published gitHead b3b1287aad81def2e2ae707274b74531b61ddbaf cannot be retrieved from the official repository. Rather than use a current license without evidence, compared both official npm releases: all 26 files other than package.json are byte-identical between 2.3.8 and 2.3.7. Only version and the react-style-singleton dependency range differ. Version 2.3.7's exact published gitHead/tag is 29e9fcd1eecf7d3b77a767941c4a57fe461fc1e4. Its entire src tree is identical to the later official commit 7301c160fda44cb8cf2b9fdfde61efad35736196 that adds the full MIT notice, Copyright (c) 2025 Anton Korzunov. That pinned grant applies to the unchanged source. Artifact equality evidence, registry metadata and source-tree IDs are retained. Checks rehash all 26 installed files before accepting this recovery.
 
 All research was read-only against public official registries/repositories. No production dependency version, feature, or Room behavior was changed. These are packaging/provenance checks, not a blanket legal opinion.
+
+- use-composed-ref 1.4.0: source manifest pinned to published gitHead ea2c9d969f2f90a349f4c99338b806423824cea2. Standard MIT text comes from SPDX license-list-data commit c4a7237ec8f4654e867546f9f409749300f1bf4c. The loader verifies the exact package/version/license, manifest and text hashes, unchanged placeholders and absent author. No other package automatically qualifies for this entry.

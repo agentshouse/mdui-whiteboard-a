@@ -5,3 +5,5 @@ dist/
 .mermaid-feasibility-dist/
 tests/screenshots/
 tests/*.log
+
+packages/excalidraw/fonts/Xiaolai/*.woff2

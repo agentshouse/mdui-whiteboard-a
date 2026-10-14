@@ -61,3 +61,16 @@ test('runtime Room Draft observation redraws other sessions, with no recovery pa
   assert.deepEqual([...f.kept.keys()],['drawing.md']);
   off();two.accept(null);assert.equal(updates.length,1);
 });
+
+test('an unknown write refusal is surfaced once with its retry policy', async () => {
+  const f = fixture();
+  let calls = 0;
+  f.runtime.roomDraft.write = async () => {
+    calls++;
+    return { outcome: 'refused', code: 'future-write-policy', retryable: false } as never;
+  };
+  const session = new DraftSession(f.runtime, 'room', 'drawing.md');
+  await assert.rejects(session.stage({fields:{title:{value:'Keep',base:null}}}), {code:'future-write-policy',retryable:false});
+  assert.equal(calls, 1);
+  assert.equal(f.saves.length, 0);
+});
