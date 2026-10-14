@@ -40,10 +40,8 @@ export function Whiteboard({ ownerDocument, navigation: suppliedNavigation }: { 
   const pendingInput = useRef(new Map<DraftSession, { scene: number; title: number; sceneFailed: boolean; titleFailed: boolean }>());
   const redrawDraft = useRef<(() => void) | null>(null);
   const [drawings, setDrawings] = useState<Drawing[]>([]);
-  const roomsState = useObserve(runtime, 'rooms');
-  const syncState = useObserve(runtime, 'sync-status');
-  const rooms = roomsState.state === 'ready' ? roomsState.value : undefined;
-  const sync = syncState.state === 'ready' ? syncState.value : undefined;
+  const rooms = useObserve(runtime, 'rooms');
+  const sync = useObserve(runtime, 'sync-status');
   const synced = sync?.lastCompleted != null;
   const room = synced && rooms?.length === 1 ? rooms[0].locator : '';
   const [readyOnce, setReadyOnce] = useState(false);
@@ -189,7 +187,7 @@ export function Whiteboard({ ownerDocument, navigation: suppliedNavigation }: { 
         listen(observeRoomDrafts(md), value => { sessions.current.forEach(session => session.accept(value.find(draft => draft.room === session.room && draft.path === session.path) ?? null)); if (value.some(draft => draft.returned)) setAttention('A Room draft needs attention. Resolve it in House before saving again.'); }),
         listen(observeServiceMode(md), value => { setWriteHalted(value === 'write-halted'); }),
         listen(observeStorageLoss(md), value => { setStorageLost(!!value); if (value) setAttention(`House storage warning: ${value}`); }),
-        listen(observeConnectionRefusal(md), value => { setRefused(value ? `House connection refused: ${value.code}` : ''); }),
+        listen(observeConnectionRefusal(md), value => { setRefused(value ? `House connection refused: ${value.reason}` : ''); }),
       ]);
     }
     run().catch(e => { if (!disposed) setError(errorText(e)); });

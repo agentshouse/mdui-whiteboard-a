@@ -30,12 +30,12 @@ test('the official bridge supplies the exact client, reuses one connection, and 
   }
 })
 
-test('production uses the licensed bridge and current official React observation helper', () => {
+test('production uses the licensed bridge without a direct Runtime import or dependency', () => {
   const source = readFileSync('src/house.ts', 'utf8')
   assert.doesNotMatch(source, /connectMdRuntime|serveMdRuntime|RuntimePort/)
   const pkg = JSON.parse(readFileSync('package.json', 'utf8'))
-  assert.equal(pkg.dependencies['@agentshouse/app-bridge'], '0.1.0-cc70c9b07c3ec')
-  assert.equal(pkg.dependencies['@agentshouse/mdruntime'], '0.1.0-c8ca66ac9e99d')
+  assert.equal(pkg.dependencies['@agentshouse/app-bridge'], '0.1.0-ca4ec913df08d')
+  assert.equal(pkg.dependencies['@agentshouse/mdruntime'], '0.1.0-cff8ba8fa2542')
   const bridge = JSON.parse(readFileSync('node_modules/@agentshouse/app-bridge/package.json', 'utf8'))
   assert.equal(bridge.license, 'MIT')
   assert.match(readFileSync('node_modules/@agentshouse/app-bridge/LICENSE', 'utf8'), /Permission is hereby granted/)

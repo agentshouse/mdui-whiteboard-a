@@ -108,7 +108,7 @@ test('Whiteboard preserves the mounted unsaved canvas through ambiguity, reach l
       assert.equal(input.value,'Unfinished sketch');
     }
     await emit('rooms',rooms);
-    await emit('connection-refusal',{code:'temporary_reach_loss',retryable:false});
+    await emit('connection-refusal',{reason:'temporary_reach_loss'});
     assert.equal(button('Save').disabled,true);
     await emit('connection-refusal',null);
     assert.equal(button('Save').disabled,false);

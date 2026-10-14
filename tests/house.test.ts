@@ -169,7 +169,7 @@ test('a racing tab is refused atomically with no save or rebase', async () => {
 })
 
 test('a local Save refusal preserves all details and leaves its draft for explicit resolution', async () => {
-  const refusal = { outcome: 'refused', code: 'changed-underneath', retryable: false, file: drawing.path, parts: [{ path: drawing.path, part: 'section', name: 'Scene' }] }
+  const refusal = { outcome: 'refused', rule: 'changed-underneath', file: drawing.path, parts: [{ path: drawing.path, part: 'section', name: 'Scene' }] }
   const mock = mockRuntime({ saveResult: refusal })
   await assert.rejects(saveDrawing(mock.md, drawing, oldScene), (error: unknown) => {
     assert.ok(error instanceof HouseWriteError)

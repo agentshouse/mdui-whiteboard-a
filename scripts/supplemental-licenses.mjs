@@ -21,25 +21,6 @@ export function loadSupplementalLicenses(root) {
       const text = fs.readFileSync(file, 'utf8');
       assert(text.length > 500 && text.includes('Copyright'), `Incomplete recovered notice: ${key}`);
       assert.equal(createHash('sha256').update(text).digest('hex'), record.sha256, `Recovered notice changed: ${key}`);
-      if (record.basis === 'spdx-declaration') {
-        assert.equal(key, 'use-composed-ref@1.4.0', `Unreviewed declaration-only notice: ${key}`);
-        assert.equal(record.declaredLicense, 'MIT');
-        const sourceBytes = fs.readFileSync(path.join(root, record.sourceManifestFile));
-        assert.equal(createHash('sha256').update(sourceBytes).digest('hex'), record.sourceManifestSha256);
-        const source = JSON.parse(sourceBytes);
-        const installed = JSON.parse(fs.readFileSync(path.join(root, 'node_modules', record.name, 'package.json'), 'utf8'));
-        for (const manifest of [source, installed]) {
-          assert.equal(manifest.name, record.name);
-          assert.equal(manifest.version, record.version);
-          assert.equal(manifest.license, record.declaredLicense);
-          assert.deepEqual(manifest.author ?? null, record.declaredAuthor);
-        }
-        assert.equal(record.copyrightHolder, null);
-        assert.equal(record.licenseTextCommit, 'c4a7237ec8f4654e867546f9f409749300f1bf4c');
-        assert.equal(record.licenseTextSourceUrl, `https://github.com/spdx/license-list-data/blob/${record.licenseTextCommit}/text/MIT.txt`);
-        assert.equal(record.sha256, 'b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5');
-        assert(text.includes('Copyright (c) <year> <copyright holders>'));
-      }
       if (record.artifactComparison) {
         const proof = JSON.parse(fs.readFileSync(path.join(root, record.artifactComparison), 'utf8'));
         const packageDirectory = path.join(root, 'node_modules', record.name);

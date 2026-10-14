@@ -181,7 +181,7 @@ async function queueChange(md: HouseRuntime, room: string, path: string, parts: 
   }
   const answer = await md.save(room, [{ path, revision: written.roomDraft.revision }])
   if (answer.outcome !== 'saved') {
-    throw new HouseWriteError(`House did not queue this change: ${answer.code}. Your Room draft has been kept.`, answer)
+    throw new HouseWriteError(`House did not queue this change: ${answer.rule}. Your Room draft has been kept.`, answer)
   }
   return { outcome: 'queued', identifier: answer.identifier }
 }

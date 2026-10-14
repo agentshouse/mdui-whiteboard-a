@@ -38,6 +38,6 @@ for(const [relative,entry] of Object.entries(lock.packages)) {
   }
   packages++;
 }
-const result={preservation:'passed',strictCompleteness:gaps.length?'blocked':'passed',packages,recovered,gaps,scope:'Installed production dependency closure, a conservative superset of the browser bundle. Missing package-root notices use hashed official source text with pinned provenance. The explicitly approved use-composed-ref@1.4.0 exception uses its MIT declaration and pinned standard SPDX text, without claiming a recovered notice or known copyright holder. Other unresolved notices and UNLICENSED metadata remain flagged.'};
+const result={preservation:'passed',strictCompleteness:gaps.length?'blocked':'passed',packages,recovered,gaps,scope:'Installed production dependency closure, a conservative superset of the browser bundle. Missing package-root notices may be completed only with hashed exact official source text and pinned provenance; unresolved notices and UNLICENSED metadata remain flagged.'};
 console.log(JSON.stringify(result,null,2));
 if(gaps.length) process.exitCode=1;

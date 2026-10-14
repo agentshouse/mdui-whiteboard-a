@@ -31,7 +31,7 @@ for (const [relative, entry] of Object.entries(lock.packages).sort(([a], [b]) =>
     if (recovery && identifier !== 'UNLICENSED') {
       if (recovery.declaredLicense !== identifier) throw new Error(`Recovered license identifier mismatch: ${pkg.name}`)
       const { text, ...provenance } = recovery
-      parts.push(`\n--- ${recovery.basis === 'spdx-declaration' ? 'Standard SPDX text for the declared license; no upstream notice or author supplied' : 'Recovered from exact official source'} ---\nSource: ${recovery.sourceUrl}\nCommit: ${recovery.commit}\nPublished gitHead: ${recovery.registryGitHead}\nVerification: ${recovery.verification}\nSHA-256: ${recovery.sha256}\n${recovery.licenseTextSourceUrl ? `Standard text source: ${recovery.licenseTextSourceUrl}\nCopyright holder: not provided by the package; placeholders below are unchanged.\n` : ''}\n${text}\n`)
+      parts.push(`\n--- Recovered from exact official source ---\nSource: ${recovery.sourceUrl}\nCommit: ${recovery.commit}\nPublished gitHead: ${recovery.registryGitHead}\nVerification: ${recovery.verification}\nSHA-256: ${recovery.sha256}\n\n${text}\n`)
       recovered.push(provenance)
     } else {
       missing.push({ name: pkg.name, version: pkg.version, license: identifier })
